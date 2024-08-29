@@ -1,5 +1,5 @@
-import { useFormControl } from "@chakra-ui/form-control";
-import { useTheme } from "@chakra-ui/system";
+import type {ColorPalette} from "@chakra-ui/react";
+import { useChakraContext, useFieldContext,} from "@chakra-ui/react";
 import type { GroupBase, Props } from "react-select";
 import chakraComponents from "./chakra-components";
 import type { SelectedOptionStyle } from "./types";
@@ -13,7 +13,7 @@ const useChakraSelectProps = <
   // eslint-disable-next-line deprecation/deprecation
   theme,
   size,
-  colorScheme = "gray",
+  colorPalette = "gray",
   isDisabled,
   isInvalid,
   isReadOnly,
@@ -22,9 +22,7 @@ const useChakraSelectProps = <
   inputId,
   tagVariant,
   selectedOptionStyle = "color",
-  selectedOptionColorScheme,
-  // eslint-disable-next-line deprecation/deprecation
-  selectedOptionColor,
+  selectedOptionColorPalette,
   variant,
   focusBorderColor,
   errorBorderColor,
@@ -34,21 +32,13 @@ const useChakraSelectProps = <
   menuIsOpen,
   ...props
 }: Props<Option, IsMulti, Group>): Props<Option, IsMulti, Group> => {
-  const chakraTheme = useTheme();
-  const { variant: defaultVariant } = chakraTheme.components.Input.defaultProps;
+  const chakraContext = useChakraContext();
+  const { variant: defaultVariant } = chakraContext.getRecipe('input').defaultVariants;
 
   // Combine the props passed into the component with the props that can be set
   // on a surrounding form control to get the values of `isDisabled` and
   // `isInvalid`
-  const inputProps = useFormControl({
-    id: inputId,
-    isDisabled,
-    isInvalid,
-    isRequired,
-    isReadOnly,
-    onFocus,
-    onBlur,
-  });
+  const inputProps = useFieldContext().getInputProps();
 
   // Unless `menuIsOpen` is controlled, disable it if the select is readonly
   const realMenuIsOpen =
@@ -62,8 +52,8 @@ const useChakraSelectProps = <
   }
 
   // Ensure that the color used for the selected options is a string
-  let realSelectedOptionColorScheme: string =
-    selectedOptionColorScheme || selectedOptionColor || "blue";
+  let realSelectedOptionColorScheme: ColorPalette =
+    selectedOptionColorPalette || "blue";
   if (typeof realSelectedOptionColorScheme !== "string") {
     realSelectedOptionColorScheme = "blue";
   }
@@ -75,11 +65,11 @@ const useChakraSelectProps = <
       ...components,
     },
     // Custom select props
-    colorScheme,
+    colorPalette,
     size,
     tagVariant,
     selectedOptionStyle: realSelectedOptionStyle,
-    selectedOptionColorScheme: realSelectedOptionColorScheme,
+    selectedOptionColorPalette: realSelectedOptionColorScheme,
     variant: variant ?? defaultVariant,
     chakraStyles,
     focusBorderColor,

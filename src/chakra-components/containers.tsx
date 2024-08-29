@@ -1,13 +1,12 @@
 import React from "react";
-import { Box } from "@chakra-ui/layout";
-import type { SystemStyleObject } from "@chakra-ui/system";
-import { useMultiStyleConfig } from "@chakra-ui/system";
 import type {
   ContainerProps,
   GroupBase,
   IndicatorsContainerProps,
   ValueContainerProps,
 } from "react-select";
+import type { SystemStyleObject} from "@chakra-ui/react";
+import {Box, useSlotRecipe} from "@chakra-ui/react";
 import { useSize } from "../utils";
 
 export const SelectContainer = <
@@ -28,15 +27,15 @@ export const SelectContainer = <
     selectProps: { chakraStyles },
   } = props;
 
-  const initialSx: SystemStyleObject = {
+  const initialCss: SystemStyleObject = {
     position: "relative",
     direction: isRtl ? "rtl" : undefined,
     ...(isDisabled ? { cursor: "not-allowed" } : {}),
   };
 
-  const sx = chakraStyles?.container
-    ? chakraStyles.container(initialSx, props)
-    : initialSx;
+  const css = chakraStyles?.container
+    ? chakraStyles.container(initialCss, props)
+    : initialCss;
 
   return (
     <Box
@@ -49,7 +48,7 @@ export const SelectContainer = <
         },
         className
       )}
-      sx={sx}
+      css={css}
     >
       {children}
     </Box>
@@ -84,14 +83,15 @@ export const ValueContainer = <
 
   // Getting the css from input instead of select
   // to fit better with each of the variants
-  const inputStyles = useMultiStyleConfig("Input", {
+  const inputRecipe = useSlotRecipe({ key: "input" })
+  const inputStyles = inputRecipe({
     size,
     variant,
     focusBorderColor,
     errorBorderColor,
-  });
+  })
 
-  const initialSx: SystemStyleObject = {
+  const initialCss: SystemStyleObject = {
     display: isMulti && hasValue && controlShouldRenderValue ? "flex" : "grid",
     alignItems: "center",
     flex: 1,
@@ -103,9 +103,9 @@ export const ValueContainer = <
     overflow: "hidden",
   };
 
-  const sx = chakraStyles?.valueContainer
-    ? chakraStyles.valueContainer(initialSx, props)
-    : initialSx;
+  const css = chakraStyles?.valueContainer
+    ? chakraStyles.valueContainer(initialCss, props)
+    : initialCss;
 
   return (
     <Box
@@ -118,7 +118,7 @@ export const ValueContainer = <
         },
         className
       )}
-      sx={sx}
+      css={css}
     >
       {children}
     </Box>
@@ -140,16 +140,16 @@ export const IndicatorsContainer = <
     selectProps: { chakraStyles },
   } = props;
 
-  const initialSx: SystemStyleObject = {
+  const initialCss: SystemStyleObject = {
     display: "flex",
     alignItems: "center",
     alignSelf: "stretch",
     flexShrink: 0,
   };
 
-  const sx = chakraStyles?.indicatorsContainer
-    ? chakraStyles.indicatorsContainer(initialSx, props)
-    : initialSx;
+  const css = chakraStyles?.indicatorsContainer
+    ? chakraStyles.indicatorsContainer(initialCss, props)
+    : initialCss;
 
   return (
     <Box
@@ -160,7 +160,7 @@ export const IndicatorsContainer = <
         },
         className
       )}
-      sx={sx}
+      css={css}
     >
       {children}
     </Box>

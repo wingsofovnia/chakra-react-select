@@ -1,9 +1,4 @@
-import type {
-  Pseudos,
-  ResponsiveObject,
-  SystemStyleObject,
-  ThemeTypings,
-} from "@chakra-ui/system";
+
 import type {
   ClearIndicatorProps,
   ContainerProps,
@@ -25,16 +20,7 @@ import type {
   SingleValueProps,
   ValueContainerProps,
 } from "react-select";
-
-/**
- * This is needed because Chakra improperly types their `SystemStyleObject` to not include pseudo selectors,
- * even though the objects actually include them.
- *
- * @see {@link https://github.com/chakra-ui/chakra-ui/issues/6261}
- */
-export type ThemeObject = SystemStyleObject & {
-  [K in keyof Pseudos]?: SystemStyleObject;
-};
+import type {SystemStyleObject} from "@chakra-ui/react";
 
 export interface SizeProps<PropType = string | number> {
   sm: PropType;
@@ -44,20 +30,11 @@ export interface SizeProps<PropType = string | number> {
 
 export type Size = "sm" | "md" | "lg";
 
-export type SizeProp = Size | ResponsiveObject<Size> | Size[];
-
-export type TagVariant = "subtle" | "solid" | "outline" | (string & {});
+export type TagVariant = "subtle" | "solid" | "outline" | "surface" | "raised";
 
 export type SelectedOptionStyle = "color" | "check";
 
-export type Variant =
-  | "outline"
-  | "filled"
-  | "flushed"
-  | "unstyled"
-  | (string & {});
-
-export type ColorScheme = ThemeTypings["colorSchemes"];
+export type Variant = "solid" | "subtle" | "outline" | "ghost" | "plain"
 
 export type StylesFunction<ComponentProps> = (
   provided: SystemStyleObject,

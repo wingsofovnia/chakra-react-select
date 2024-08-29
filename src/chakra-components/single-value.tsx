@@ -1,7 +1,7 @@
 import React from "react";
-import { Box } from "@chakra-ui/layout";
-import type { SystemStyleObject } from "@chakra-ui/system";
 import type { GroupBase, SingleValueProps } from "react-select";
+import type { SystemStyleObject} from "@chakra-ui/react";
+import {Box, Button} from "@chakra-ui/react";
 
 const SingleValue = <
   Option,
@@ -19,7 +19,7 @@ const SingleValue = <
     selectProps: { chakraStyles },
   } = props;
 
-  const initialSx: SystemStyleObject = {
+  const initialCss: SystemStyleObject = {
     gridArea: "1 / 1 / 2 / 3",
     mx: "0.125rem",
     maxWidth: "100%",
@@ -28,9 +28,9 @@ const SingleValue = <
     whiteSpace: "nowrap",
   };
 
-  const sx = chakraStyles?.singleValue
-    ? chakraStyles.singleValue(initialSx, props)
-    : initialSx;
+  const css = chakraStyles?.singleValue
+    ? chakraStyles.singleValue(initialCss, props)
+    : initialCss;
 
   return (
     <Box
@@ -41,7 +41,7 @@ const SingleValue = <
         },
         className
       )}
-      sx={sx}
+      css={css}
       {...innerProps}
     >
       {children}

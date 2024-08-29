@@ -1,8 +1,7 @@
 import React from "react";
-import { Box } from "@chakra-ui/layout";
-import type { SystemStyleObject } from "@chakra-ui/system";
-import { chakra } from "@chakra-ui/system";
 import type { GroupBase, InputProps } from "react-select";
+import type { SystemStyleObject} from "@chakra-ui/react";
+import {chakra, Box} from "@chakra-ui/react";
 import { cleanCommonProps } from "../utils";
 
 const Input = <
@@ -21,7 +20,7 @@ const Input = <
   const { innerRef, isDisabled, isHidden, inputClassName, ...innerProps } =
     cleanCommonProps(props);
 
-  const spacingSx: SystemStyleObject = {
+  const spacingCss: SystemStyleObject = {
     gridArea: "1 / 2",
     minW: "2px",
     border: 0,
@@ -30,7 +29,7 @@ const Input = <
     padding: 0,
   };
 
-  const initialContainerSx: SystemStyleObject = {
+  const initialContainerCss: SystemStyleObject = {
     flex: "1 1 auto",
     display: "inline-grid",
     gridArea: "1 / 1 / 2 / 3",
@@ -47,33 +46,33 @@ const Input = <
       visibility: "hidden",
       whiteSpace: "pre",
       padding: 0,
-      ...spacingSx,
+      ...spacingCss,
     },
   };
-  const containerSx = chakraStyles?.inputContainer
-    ? chakraStyles.inputContainer(initialContainerSx, props)
-    : initialContainerSx;
+  const containerCss = chakraStyles?.inputContainer
+    ? chakraStyles.inputContainer(initialContainerCss, props)
+    : initialContainerCss;
 
-  const initialInputSx: SystemStyleObject = {
+  const initialInputCss: SystemStyleObject = {
     background: 0,
     opacity: isHidden ? 0 : 1,
     width: "100%",
-    ...spacingSx,
+    ...spacingCss,
   };
-  const inputSx = chakraStyles?.input
-    ? chakraStyles.input(initialInputSx, props)
-    : initialInputSx;
+  const inputCss = chakraStyles?.input
+    ? chakraStyles.input(initialInputCss, props)
+    : initialInputCss;
 
   return (
     <Box
       className={cx({ "input-container": true }, className)}
       data-value={value || ""}
-      sx={containerSx}
+      css={containerCss}
     >
       <chakra.input
         className={cx({ input: true }, inputClassName)}
         ref={innerRef}
-        sx={inputSx}
+        css={inputCss}
         disabled={isDisabled}
         readOnly={isReadOnly ? true : undefined}
         {...innerProps}

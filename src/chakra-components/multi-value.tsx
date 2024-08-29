@@ -1,24 +1,22 @@
 import React from "react";
-import type { IconProps } from "@chakra-ui/icon";
-import { Icon } from "@chakra-ui/icon";
-import { Box } from "@chakra-ui/layout";
-import type { SystemStyleObject } from "@chakra-ui/system";
-import { chakra, useMultiStyleConfig } from "@chakra-ui/system";
 import type {
   GroupBase,
   MultiValueGenericProps,
   MultiValueProps,
   MultiValueRemoveProps,
 } from "react-select";
+import type {SystemStyleObject, IconProps, ColorPalette} from "@chakra-ui/react";
+import { chakra, useSlotRecipe, Icon, Box} from "@chakra-ui/react";
 import { useSize } from "../utils";
+import type {TagVariant} from "../types.js";
 
-const hasColorScheme = (option: unknown): option is { colorScheme: string } =>
+const hasColorScheme = (option: unknown): option is { colorPalette: ColorPalette } =>
   typeof option === "object" &&
   option !== null &&
-  "colorScheme" in option &&
-  typeof option.colorScheme === "string";
+  "colorPalette" in option &&
+  typeof option.colorPalette === "string";
 
-const hasVariant = (option: unknown): option is { variant: string } =>
+const hasVariant = (option: unknown): option is { variant: TagVariant } =>
   typeof option === "object" &&
   option !== null &&
   "variant" in option &&
@@ -53,16 +51,16 @@ const MultiValue = <
 
   const { Container, Label, Remove } = components;
 
-  const { chakraStyles, colorScheme, tagVariant, size: sizeProp } = selectProps;
+  const { chakraStyles, colorPalette, tagVariant, size: sizeProp } = selectProps;
 
   const size = useSize(sizeProp);
 
-  let optionColorScheme = "";
-  let optionVariant = "";
+  let optionColorPalette: ColorPalette | undefined = undefined;
+  let optionVariant: TagVariant | undefined;
   let optionIsFixed = false;
 
   if (hasColorScheme(data)) {
-    optionColorScheme = data.colorScheme;
+    optionColorPalette = data.colorPalette;
   }
 
   if (hasVariant(data)) {
@@ -73,25 +71,26 @@ const MultiValue = <
     optionIsFixed = data.isFixed;
   }
 
-  const tagStyles = useMultiStyleConfig("Tag", {
+  const tagRecipe = useSlotRecipe({ key: "tag" })
+  const tagStyles = tagRecipe({
     size,
-    colorScheme: optionColorScheme || colorScheme,
+    colorPalette: optionColorPalette || colorPalette,
     variant:
       optionVariant || tagVariant || (optionIsFixed ? "solid" : "subtle"),
-  });
+  })
 
-  const containerInitialSx: SystemStyleObject = {
-    ...tagStyles.container,
+  const containerInitialCss: SystemStyleObject = {
+    ...tagStyles.root,
     display: "flex",
     alignItems: "center",
     minWidth: 0, // resolves flex/text-overflow bug
     margin: "0.125rem",
   };
-  const containerSx: SystemStyleObject = chakraStyles?.multiValue
-    ? chakraStyles.multiValue(containerInitialSx, props)
-    : containerInitialSx;
+  const containerCss: SystemStyleObject = chakraStyles?.multiValue
+    ? chakraStyles.multiValue(containerInitialCss, props)
+    : containerInitialCss;
 
-  const labelInitialSx: SystemStyleObject = {
+  const labelInitialCss: SystemStyleObject = {
     ...tagStyles.label,
     overflow: "hidden",
     textOverflow:
@@ -100,19 +99,19 @@ const MultiValue = <
         : undefined,
     whiteSpace: "nowrap",
   };
-  const labelSx = chakraStyles?.multiValueLabel
-    ? chakraStyles.multiValueLabel(labelInitialSx, props)
-    : labelInitialSx;
+  const labelCss = chakraStyles?.multiValueLabel
+    ? chakraStyles.multiValueLabel(labelInitialCss, props)
+    : labelInitialCss;
 
-  const removeInitialSx: SystemStyleObject = {
-    ...tagStyles.closeButton,
+  const removeInitialCss: SystemStyleObject = {
+    ...tagStyles.closeTrigger,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   };
-  const removeSx = chakraStyles?.multiValueRemove
-    ? chakraStyles.multiValueRemove(removeInitialSx, props)
-    : removeInitialSx;
+  const removeCss = chakraStyles?.multiValueRemove
+    ? chakraStyles.multiValueRemove(removeInitialCss, props)
+    : removeInitialCss;
 
   return (
     <Container
@@ -127,7 +126,7 @@ const MultiValue = <
         ),
         ...innerProps,
       }}
-      sx={containerSx}
+      css={containerCss}
       selectProps={selectProps}
     >
       <Label
@@ -140,7 +139,7 @@ const MultiValue = <
             className
           ),
         }}
-        sx={labelSx}
+        css={labelCss}
         selectProps={selectProps}
       >
         {children}
@@ -157,7 +156,7 @@ const MultiValue = <
           "aria-label": `Remove ${children || "option"}`,
           ...removeProps,
         }}
-        sx={removeSx}
+        css={removeCss}
         selectProps={selectProps}
         isFocused={isFocused}
       />
@@ -172,10 +171,10 @@ const MultiValueContainer = <
 >(
   props: MultiValueGenericProps<Option, IsMulti, Group>
 ) => {
-  const { children, innerProps, sx } = props;
+  const { children, innerProps, css } = props;
 
   return (
-    <chakra.span {...innerProps} sx={sx}>
+    <chakra.span {...innerProps} css={css}>
       {children}
     </chakra.span>
   );
@@ -188,10 +187,10 @@ const MultiValueLabel = <
 >(
   props: MultiValueGenericProps<Option, IsMulti, Group>
 ) => {
-  const { children, innerProps, sx } = props;
+  const { children, innerProps, css } = props;
 
   return (
-    <chakra.span {...innerProps} sx={sx}>
+    <chakra.span {...innerProps} css={css}>
       {children}
     </chakra.span>
   );
@@ -218,7 +217,7 @@ const MultiValueRemove = <
 >(
   props: MultiValueRemoveProps<Option, IsMulti, Group>
 ) => {
-  const { children, innerProps, isFocused, data, sx } = props;
+  const { children, innerProps, isFocused, data, css } = props;
 
   if (hasIsFixed(data) && data.isFixed) {
     return null;
@@ -228,7 +227,7 @@ const MultiValueRemove = <
     <Box
       {...innerProps}
       role="button"
-      sx={sx}
+      css={css}
       data-focus={isFocused ? true : undefined}
       data-focus-visible={isFocused ? true : undefined}
     >

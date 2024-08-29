@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { SystemStyleObject } from "@chakra-ui/system";
 import type { GroupBase, StylesConfig, ThemeConfig } from "react-select";
+import {DurationsToken} from "@chakra-ui/react/dist/types/styled-system/generated/token.gen.js";
+import type {ColorPalette, SystemStyleObject} from "@chakra-ui/react";
 import type {
   ChakraStylesConfig,
-  ColorScheme,
   SelectedOptionStyle,
-  SizeProp,
+  Size,
   TagVariant,
   Variant,
 } from "./types";
@@ -42,7 +42,7 @@ declare module "react-select/base" {
      * @see {@link https://github.com/csandman/chakra-react-select#size--options-responsivevaluesm--md--lg--default-md}
      * @see {@link https://chakra-ui.com/docs/components/input#changing-the-size-of-the-input}
      */
-    size?: SizeProp;
+    size?: Size;
 
     /**
      * Determines whether or not to style the input with the invalid border
@@ -88,10 +88,9 @@ declare module "react-select/base" {
      * The styling matches the chakra `Tag` component.
      *
      * @defaultValue `"gray"`
-     * @see {@link https://github.com/csandman/chakra-react-select#colorscheme}
      * @see {@link https://chakra-ui.com/docs/components/tag/props}
      */
-    colorScheme?: ColorScheme;
+    colorPalette?: ColorPalette;
 
     /**
      * The `variant` prop that will be forwarded to your `MultiValue` component
@@ -105,17 +104,6 @@ declare module "react-select/base" {
      * @see {@link https://chakra-ui.com/docs/data-display/tag#props}
      */
     tagVariant?: TagVariant;
-
-    /**
-     * Passing `true` for this prop will make the group headers
-     * `position: sticky` and keep them stuck to the top while their
-     * corresponding group is in view.
-     *
-     * @defaultValue `false`
-     * @deprecated This prop should probably not have existed and will be
-     * removed soon.
-     */
-    hasStickyGroupHeaders?: boolean;
 
     /**
      * Whether to style a selected option by highlighting it in a solid color
@@ -135,14 +123,8 @@ declare module "react-select/base" {
      * and the `300` value in dark mode.
      *
      * @defaultValue `blue`
-     * @see {@link https://github.com/csandman/chakra-react-select#selectedoptioncolorscheme--default-blue}
      */
-    selectedOptionColorScheme?: ColorScheme;
-
-    /**
-     * @deprecated Replaced by {@link selectedOptionColorScheme}
-     */
-    selectedOptionColor?: ColorScheme;
+    selectedOptionColorPalette?: ColorPalette;
 
     /**
      * The color value to style the border of the `Control` with when the
@@ -216,7 +198,7 @@ declare module "react-select" {
     IsMulti extends boolean = boolean,
     Group extends GroupBase<Option> = GroupBase<Option>,
   > {
-    sx: SystemStyleObject;
+    css: SystemStyleObject;
   }
 
   export interface MultiValueGenericProps<
@@ -224,7 +206,7 @@ declare module "react-select" {
     IsMulti extends boolean = boolean,
     Group extends GroupBase<Option> = GroupBase<Option>,
   > {
-    sx: SystemStyleObject;
+    css: SystemStyleObject;
   }
 
   export interface MultiValueRemoveProps<
@@ -233,7 +215,7 @@ declare module "react-select" {
     Group extends GroupBase<Option> = GroupBase<Option>,
   > {
     isFocused: boolean;
-    sx: SystemStyleObject;
+    css: SystemStyleObject;
   }
 
   export interface LoadingIndicatorProps<
@@ -312,15 +294,12 @@ export type { AsyncCreatableSelectComponent } from "./select/async-creatable-sel
 
 export type {
   Size,
-  SizeProp,
   TagVariant,
   Variant,
   SelectedOptionStyle,
-  ColorScheme,
   StylesFunction,
   ChakraStylesConfig,
   OptionBase,
-  ThemeObject,
 } from "./types";
 
 // Forward all available exports from the original `react-select` package

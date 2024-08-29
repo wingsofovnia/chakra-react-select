@@ -1,7 +1,7 @@
 import React from "react";
-import { Box } from "@chakra-ui/layout";
-import type { SystemStyleObject } from "@chakra-ui/system";
 import type { GroupBase, PlaceholderProps } from "react-select";
+import type { SystemStyleObject} from "@chakra-ui/react";
+import {Box} from "@chakra-ui/react";
 
 const Placeholder = <
   Option,
@@ -18,16 +18,16 @@ const Placeholder = <
     selectProps: { chakraStyles },
   } = props;
 
-  const initialSx: SystemStyleObject = {
+  const initialCss: SystemStyleObject = {
     gridArea: "1 / 1 / 2 / 3",
     color: "chakra-placeholder-color",
     mx: "0.125rem",
     userSelect: "none",
   };
 
-  const sx = chakraStyles?.placeholder
-    ? chakraStyles.placeholder(initialSx, props)
-    : initialSx;
+  const css = chakraStyles?.placeholder
+    ? chakraStyles.placeholder(initialCss, props)
+    : initialCss;
 
   return (
     <Box
@@ -38,7 +38,7 @@ const Placeholder = <
         },
         className
       )}
-      sx={sx}
+      css={css}
     >
       {children}
     </Box>

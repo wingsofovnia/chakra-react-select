@@ -1,7 +1,6 @@
-import { useBreakpointValue } from "@chakra-ui/media-query";
-import { useTheme } from "@chakra-ui/system";
 import type { CommonPropsAndClassName, GroupBase } from "react-select";
-import type { Size, SizeProp } from "./types";
+import {useBreakpointValue, useChakraContext} from "@chakra-ui/react";
+import type { Size } from "./types";
 
 /**
  * Clean Common Props
@@ -67,22 +66,12 @@ const getDefaultSize = (size: unknown): Size => {
   return "md";
 };
 
-export const useSize = (size: SizeProp | undefined): Size => {
-  const chakraTheme = useTheme();
-  const defaultSize = getDefaultSize(
-    chakraTheme.components.Input.defaultProps.size
-  );
+export const useSize = (size?: Size): Size => {
+  const chakraContext = useChakraContext();
+  const { size: defaultSize } = chakraContext.getRecipe('input').defaultVariants;
 
   // Ensure that the size used is one of the options, either `sm`, `md`, or `lg`
-  const definedSize: SizeProp = size ?? defaultSize;
+  const definedSize: Size = size ?? defaultSize;
   // Or, if a breakpoint is passed, get the size based on the current screen size
-  const realSize: Size =
-    useBreakpointValue<Size>(
-      typeof definedSize === "string" ? [definedSize] : definedSize,
-      {
-        fallback: "md",
-      }
-    ) || defaultSize;
-
-  return realSize;
+  return useBreakpointValue({ base: definedSize }, { fallback: "md" }) ?? definedSize
 };
